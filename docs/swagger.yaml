@@ -1,0 +1,118 @@
+definitions:
+  rest.AuthCheckTokenResp:
+    properties:
+      username:
+        type: string
+    type: object
+  rest.AuthLoginResp:
+    properties:
+      access_token:
+        type: string
+    type: object
+  rest.BaseJSONResp:
+    properties:
+      data: {}
+      detail:
+        type: string
+      error:
+        type: boolean
+      message:
+        type: string
+    type: object
+  rest.PostCheckTokenReq:
+    properties:
+      token:
+        type: string
+    type: object
+  rest.PostLoginReq:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  rest.PostRegisterReq:
+    properties:
+      confirm_password:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Backend Challange Synapsis API
+paths:
+  /auth/check-token:
+    post:
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/rest.PostCheckTokenReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/rest.BaseJSONResp'
+            - properties:
+                data:
+                  $ref: '#/definitions/rest.AuthCheckTokenResp'
+              type: object
+      summary: check jwt token
+      tags:
+      - Auth
+  /auth/login:
+    post:
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/rest.PostLoginReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/rest.BaseJSONResp'
+            - properties:
+                data:
+                  $ref: '#/definitions/rest.AuthLoginResp'
+              type: object
+      summary: generate jwt token
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/rest.PostRegisterReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/rest.BaseJSONResp'
+            - properties:
+                data:
+                  $ref: '#/definitions/rest.AuthLoginResp'
+              type: object
+      summary: Register New User
+      tags:
+      - Auth
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
