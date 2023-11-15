@@ -1,4 +1,4 @@
-# Rentify Backend (development)
+# Backend Challenge Synapsis
 
 ## CLI Commands
 - `seed-superuser`
