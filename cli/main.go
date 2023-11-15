@@ -5,6 +5,7 @@ import (
 	"synapsis/domain/model"
 	"synapsis/exception"
 	"synapsis/repository"
+	"synapsis/utils/helper"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -41,6 +42,7 @@ func SeedSuperuser(userRepo repository.IUserRepo, args ...string) {
 	}
 
 	user := &model.User{
+		ID:       helper.GenerateUUID(),
 		Username: username,
 		Password: string(hashedPass),
 	}
@@ -50,14 +52,17 @@ func SeedSuperuser(userRepo repository.IUserRepo, args ...string) {
 func SeedProduct(productRepo repository.IProductService) {
 	// products
 	product1 := &model.Product{
+		ID:    helper.GenerateUUID(),
 		Name:  "susu",
 		Price: 100,
 	}
 	product3 := &model.Product{
+		ID:    helper.GenerateUUID(),
 		Name:  "kopi",
 		Price: 300,
 	}
 	product4 := &model.Product{
+		ID:    helper.GenerateUUID(),
 		Name:  "jeruk",
 		Price: 400,
 	}
