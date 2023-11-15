@@ -22,9 +22,11 @@ func SetupServer(router *gin.Engine) {
 
 	// repositories
 	userRepo := repository.NewUserRepo(database)
+	productRepo := repository.NewProductRepo(database)
 
 	// services
 	authService := service.NewAuthService(userRepo)
+	_ = service.NewProductService(productRepo)
 
 	// handlers
 	authHandler := handler.NewAuthHandler(responseWriter, authService)
@@ -42,6 +44,13 @@ func SetupServer(router *gin.Engine) {
 	secureRouter := router.Group("/")
 	{
 		secureRouter.Use(middleware.JWTMiddleware(responseWriter, authService))
+
+		secureRouter.GET("/products/category-list")
+		secureRouter.GET("/products")
+		secureRouter.POST("/products/{id}/add-to-cart")
+		secureRouter.GET("/cart/items")
+		secureRouter.DELETE("/cart/items/{id}")
+		secureRouter.POST("/cart/checkout")
 	}
 
 	// swagger
