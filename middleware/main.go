@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"strings"
 	"synapsis/service"
 	"synapsis/utils/http_response"
@@ -20,7 +19,6 @@ func JWTMiddleware(respWriter http_response.IResponseWriter, authService service
 		}
 
 		tokenSplit := strings.Split(tokenString, " ")
-		fmt.Println(tokenString)
 		if len(tokenSplit) != 2 && tokenSplit[0] != "Bearer" {
 			respWriter.HTTPJsonErr(c, 401, "invalid token", "", nil)
 			c.Abort()
