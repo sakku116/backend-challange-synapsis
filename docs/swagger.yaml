@@ -19,6 +19,23 @@ definitions:
       message:
         type: string
     type: object
+  rest.GetProductListResp:
+    properties:
+      category:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      updated_at:
+        type: string
+    type: object
   rest.PostCheckTokenReq:
     properties:
       token:
@@ -144,12 +161,32 @@ paths:
             - $ref: '#/definitions/rest.BaseJSONResp'
             - properties:
                 data:
-                  additionalProperties: true
-                  type: object
+                  items:
+                    $ref: '#/definitions/rest.GetProductListResp'
+                  type: array
               type: object
       security:
       - BearerAuth: []
       summary: get product list
+      tags:
+      - Product
+  /products/category-list:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/rest.BaseJSONResp'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: get product category list
       tags:
       - Product
 securityDefinitions:
