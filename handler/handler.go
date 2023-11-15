@@ -15,6 +15,7 @@ type ProductHandler struct {
 
 type IProductHandler interface {
 	GetList(ctx *gin.Context)
+	GetCategoryList(ctx *gin.Context)
 }
 
 func NewProductHandler(respWriter http_response.IResponseWriter, productService service.IProductService) IProductHandler {
@@ -24,7 +25,6 @@ func NewProductHandler(respWriter http_response.IResponseWriter, productService 
 	}
 }
 
-// Get Product List
 // @Summary get product list
 // @Tags Product
 // @Success 200 {object} rest.BaseJSONResp{data=[]rest.GetProductListResp}
@@ -50,4 +50,19 @@ func (slf *ProductHandler) GetList(ctx *gin.Context) {
 	result = append(result, dto.ParseFromEntityList(&products)...)
 
 	slf.respWriter.HTTPJson(ctx, result)
+}
+
+// @Summary get product category list
+// @Tags Product
+// @Success 200 {object} rest.BaseJSONResp{data=[]string}
+// @Router /products/category-list [get]
+// @Security BearerAuth
+func (slf *ProductHandler) GetCategoryList(ctx *gin.Context) {
+	categories, err := slf.productService.GetCategoryList()
+	if err != nil {
+		slf.respWriter.HTTPCustomErr(ctx, err)
+		return
+	}
+
+	slf.respWriter.HTTPJson(ctx, categories)
 }

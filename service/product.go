@@ -30,7 +30,12 @@ func (slf *ProductService) GetList(category string, search string, page int, lim
 }
 
 func (slf *ProductService) GetCategoryList() ([]string, error) {
-	return nil, nil
+	categories, err := slf.productRepo.GetCategoryList()
+	if err != nil {
+		return []string{}, err
+	}
+
+	return categories, nil
 }
 
 func (slf *ProductService) AddItemToCart(id string) error {

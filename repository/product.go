@@ -16,6 +16,7 @@ type IProductService interface {
 	GetList(category string, search string, page int, limit int, sort_by string, sort_order string) ([]model.Product, error)
 	BulkCreate(products []model.Product) error
 	GetByNameAndPrice(name string, price float64) (*model.Product, error)
+	GetCategoryList() ([]string, error)
 }
 
 func NewProductRepo(db *gorm.DB) IProductService {
@@ -84,4 +85,13 @@ func (slf *ProductRepo) GetByNameAndPrice(name string, price float64) (*model.Pr
 		return nil, err
 	}
 	return &product, nil
+}
+
+func (slf *ProductRepo) GetCategoryList() ([]string, error) {
+	var categories []string
+	err := slf.DB.Model(&model.Product{}).Distinct("category").Pluck("category", &categories).Error
+	if err != nil {
+		return nil, err
+	}
+	return categories, nil
 }

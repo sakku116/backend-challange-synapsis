@@ -15,6 +15,6 @@ func Playground() {
 	repo := repository.NewProductRepo(db)
 	_ = repo
 
-	test, err := repo.GetList("", "", 1, 2, "created_at", "desc")
+	test, err := repo.GetCategoryList()
 	dump.P(test)
 }

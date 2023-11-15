@@ -47,7 +47,7 @@ func SetupServer(router *gin.Engine) {
 		secureRouter.Use(middleware.JWTMiddleware(responseWriter, authService))
 
 		secureRouter.GET("/products", productHandler.GetList)
-		secureRouter.GET("/products/category-list")
+		secureRouter.GET("/products/category-list", productHandler.GetCategoryList)
 		secureRouter.POST("/products/{id}/add-to-cart")
 		secureRouter.GET("/cart/items")
 		secureRouter.DELETE("/cart/items/{id}")
