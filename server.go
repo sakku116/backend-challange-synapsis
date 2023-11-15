@@ -26,10 +26,11 @@ func SetupServer(router *gin.Engine) {
 
 	// services
 	authService := service.NewAuthService(userRepo)
-	_ = service.NewProductService(productRepo)
+	productService := service.NewProductService(productRepo)
 
 	// handlers
 	authHandler := handler.NewAuthHandler(responseWriter, authService)
+	productHandler := handler.NewProductHandler(responseWriter, productService)
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -45,8 +46,8 @@ func SetupServer(router *gin.Engine) {
 	{
 		secureRouter.Use(middleware.JWTMiddleware(responseWriter, authService))
 
+		secureRouter.GET("/products", productHandler.GetList)
 		secureRouter.GET("/products/category-list")
-		secureRouter.GET("/products")
 		secureRouter.POST("/products/{id}/add-to-cart")
 		secureRouter.GET("/cart/items")
 		secureRouter.DELETE("/cart/items/{id}")
