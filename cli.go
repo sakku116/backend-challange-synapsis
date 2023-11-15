@@ -27,6 +27,9 @@ func CliHandler(args []string) {
 		fmt.Println("running seed data...")
 		fmt.Println("seeding products")
 		cli.SeedProduct(productRepo)
+	case "playground":
+		fmt.Println("running playground...")
+		Playground()
 	default:
 		fmt.Println("invalid command")
 		os.Exit(1)

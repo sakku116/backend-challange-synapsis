@@ -19,11 +19,7 @@ import (
 func main() {
 	args := os.Args
 	if len(args) > 1 {
-		if args[1] != "playground" {
-			CliHandler(args)
-		} else {
-			Playground()
-		}
+		CliHandler(args)
 	} else {
 		log.Printf("Envs: %v", config.Envs)
 		log.Println("starting rest api app...")
