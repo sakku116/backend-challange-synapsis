@@ -1,9 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"synapsis/config"
 	"synapsis/repository"
+
+	"github.com/gookit/goutil/dump"
 )
 
 func Playground() {
@@ -15,5 +16,5 @@ func Playground() {
 	_ = repo
 
 	test, err := repo.GetList("", "", 1, 2, "created_at", "desc")
-	fmt.Println(test)
+	dump.P(test)
 }
