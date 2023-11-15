@@ -19,6 +19,5 @@ func NewDb(uri string) (*gorm.DB, error) {
 	db.AutoMigrate(&model.Product{})
 	db.AutoMigrate(&model.Cart{})
 	db.AutoMigrate(&model.ProductOrder{})
-	db.AutoMigrate(&model.Category{})
 	return db, nil
 }

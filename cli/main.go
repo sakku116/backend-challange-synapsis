@@ -49,26 +49,29 @@ func SeedSuperuser(userRepo repository.IUserRepo, args ...string) {
 	userRepo.Create(user)
 }
 
-func SeedProduct(productRepo repository.IProductService) {
+func SeedData(productRepo repository.IProductService) {
 	// products
-	product1 := &model.Product{
-		ID:    helper.GenerateUUID(),
-		Name:  "susu",
-		Price: 100,
+	products := []model.Product{
+		{
+			ID:       helper.GenerateUUID(),
+			Name:     "susu",
+			Price:    100,
+			Category: "minuman",
+		},
+		{
+			ID:       helper.GenerateUUID(),
+			Name:     "kopi",
+			Price:    300,
+			Category: "minuman",
+		},
+		{
+			ID:       helper.GenerateUUID(),
+			Name:     "jeruk",
+			Price:    400,
+			Category: "makanan",
+		},
 	}
-	product3 := &model.Product{
-		ID:    helper.GenerateUUID(),
-		Name:  "kopi",
-		Price: 300,
-	}
-	product4 := &model.Product{
-		ID:    helper.GenerateUUID(),
-		Name:  "jeruk",
-		Price: 400,
-	}
-	products := []model.Product{*product1, *product3, *product4}
 
-	// var productsResult []model.Product
 	for _, product := range products {
 		_, err := productRepo.GetByNameAndPrice(product.Name, product.Price)
 		if err == exception.DbObjNotFound {
@@ -76,11 +79,11 @@ func SeedProduct(productRepo repository.IProductService) {
 			if err != nil {
 				panic(err)
 			}
-			// append(productsResult, product)
+			continue
 		} else if err != nil {
 			fmt.Printf("error: %v\n", err)
-			// append(productsResult, existing)
 			continue
 		}
 	}
+
 }

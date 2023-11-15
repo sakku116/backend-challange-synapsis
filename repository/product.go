@@ -14,7 +14,6 @@ type ProductRepo struct {
 type IProductService interface {
 	Create(product *model.Product) error
 	GetList(category string, search string, page int, limit int, sort_by string, sort_order string) ([]model.Product, error)
-	GetListByProductID(productID string, search string, page int, limit int, sort_by string, sort_order string) ([]model.Product, error)
 	BulkCreate(products []model.Product) error
 	GetByNameAndPrice(name string, price float64) (*model.Product, error)
 }
@@ -52,26 +51,8 @@ func (slf *ProductRepo) GetList(category string, search string, page int, limit 
 
 	query := slf.DB.Model(&model.Product{})
 	if category != "" {
-		query = query.Joins("JOIN categories ON products.category_id = categories.id").
-			Where("categories.name = ?", category)
+		query = query.Where("category = ?", category)
 	}
-	if search != "" {
-		query = query.Where("name LIKE ?", "%"+search+"%")
-	}
-	err := query.Order("created_at " + sort_order).
-		Limit(limit).
-		Offset((page - 1) * limit).
-		Find(&products).Error
-	if err != nil {
-		return nil, err
-	}
-
-	return products, nil
-}
-
-func (slf *ProductRepo) GetListByProductID(productID string, search string, page int, limit int, sort_by string, sort_order string) ([]model.Product, error) {
-	var products []model.Product
-	query := slf.DB.Model(&model.Product{}).Where("category_id = ?", productID)
 	if search != "" {
 		query = query.Where("name LIKE ?", "%"+search+"%")
 	}

@@ -25,8 +25,7 @@ func CliHandler(args []string) {
 		cli.SeedSuperuser(userRepo, args[1:]...)
 	case "seed-data":
 		fmt.Println("running seed data...")
-		fmt.Println("seeding products")
-		cli.SeedProduct(productRepo)
+		cli.SeedData(productRepo)
 	case "playground":
 		fmt.Println("running playground...")
 		Playground()
