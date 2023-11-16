@@ -65,7 +65,8 @@ func (slf *ProductService) AddItemToCart(product_id string, quantity int, user_i
 	if err != nil {
 		if err == exception.DbObjNotFound {
 			newCart = &model.Cart{
-				ID: helper.GenerateUUID(),
+				ID:     helper.GenerateUUID(),
+				UserID: user_id,
 			}
 			err = slf.cartRepo.Create(newCart)
 			if err != nil {
@@ -93,6 +94,7 @@ func (slf *ProductService) AddItemToCart(product_id string, quantity int, user_i
 
 	// create product order
 	err = slf.productOrderRepo.Create(&model.ProductOrder{
+		ID:        helper.GenerateUUID(),
 		CartID:    cart.ID,
 		ProductID: product_id,
 		Quantity:  quantity,
