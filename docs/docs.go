@@ -132,7 +132,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/cart/items": {
+        "/cart/orders": {
             "get": {
                 "security": [
                     {
@@ -143,6 +143,36 @@ const docTemplate = `{
                     "Cart"
                 ],
                 "summary": "get product list from current cart",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/rest.BaseJSONResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/cart/orders/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "remove item from cart",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "order id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

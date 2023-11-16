@@ -15,6 +15,7 @@ type IProductOrderRepo interface {
 	Create(productOrder *model.ProductOrder) error
 	Update(productOrder *model.ProductOrder) error
 	GetByID(id string) (*model.ProductOrder, error)
+	Delete(id string) error
 }
 
 func NewProductOrderRepo(db *gorm.DB) IProductOrderRepo {
@@ -50,4 +51,12 @@ func (slf *ProductOrderRepo) GetByID(id string) (*model.ProductOrder, error) {
 		}
 	}
 	return &productOrder, nil
+}
+
+func (slf *ProductOrderRepo) Delete(id string) error {
+	err := slf.db.Where("id = ?", id).Delete(&model.ProductOrder{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }

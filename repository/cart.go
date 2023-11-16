@@ -16,6 +16,7 @@ type ICartRepo interface {
 	GetLast(is_checkout bool, user_id string) (*model.Cart, error)
 	GetAssociatedProductOrders(id string) ([]model.ProductOrder, error)
 	AppendProductOrders(id string, orders []model.ProductOrder) error
+	RemoveOrderAssociations(id string, orders []model.ProductOrder) error
 }
 
 func NewCartRepo(db *gorm.DB) ICartRepo {
@@ -64,6 +65,14 @@ func (slf *CartRepo) GetAssociatedProductOrders(id string) ([]model.ProductOrder
 
 func (slf *CartRepo) AppendProductOrders(id string, orders []model.ProductOrder) error {
 	err := slf.DB.Model(&model.Cart{ID: id}).Association("ProductOrders").Append(orders)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (slf *CartRepo) RemoveOrderAssociations(id string, orders []model.ProductOrder) error {
+	err := slf.DB.Model(&model.Cart{ID: id}).Association("ProductOrders").Delete(orders)
 	if err != nil {
 		return err
 	}

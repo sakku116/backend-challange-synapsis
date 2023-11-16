@@ -133,7 +133,7 @@ paths:
       summary: Register New User
       tags:
       - Auth
-  /cart/items:
+  /cart/orders:
     get:
       responses:
         "200":
@@ -143,6 +143,24 @@ paths:
       security:
       - BearerAuth: []
       summary: get product list from current cart
+      tags:
+      - Cart
+  /cart/orders/{id}:
+    delete:
+      parameters:
+      - description: order id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.BaseJSONResp'
+      security:
+      - BearerAuth: []
+      summary: remove item from cart
       tags:
       - Cart
   /products:

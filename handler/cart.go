@@ -15,7 +15,7 @@ type CartHandler struct {
 
 type ICartHandler interface {
 	GetCartItems(ctx *gin.Context)
-	// RemoveItemFromCart(ctx *gin.Context)
+	RemoveItemFromCart(ctx *gin.Context)
 }
 
 func NewCartHandler(respWriter http_response.IResponseWriter, cartService service.ICartService) ICartHandler {
@@ -27,7 +27,7 @@ func NewCartHandler(respWriter http_response.IResponseWriter, cartService servic
 
 // @Summary get product list from current cart
 // @Tags Cart
-// @Router /cart/items [get]
+// @Router /cart/orders [get]
 // @Security BearerAuth
 // @Success 200 {object} rest.BaseJSONResp{}
 func (slf *CartHandler) GetCartItems(ctx *gin.Context) {
@@ -47,10 +47,19 @@ func (slf *CartHandler) GetCartItems(ctx *gin.Context) {
 
 // @Summary remove item from cart
 // @Tags Cart
-// @Router /cart/items/{id} [delete]
+// @Router /cart/orders/{id} [delete]
 // @Security BearerAuth
+// @Param id path string true "order id"
 // @Success 200 {object} rest.BaseJSONResp{}
-// func (slf *CartHandler) RemoveItemFromCart(ctx *gin.Context) {
-// 	product_id := ctx.Param("id")
+func (slf *CartHandler) RemoveItemFromCart(ctx *gin.Context) {
+	order_id := ctx.Param("id")
+	user_id := ctx.GetString("user_id")
 
-// }
+	err := slf.cartService.RemoveItemFromCart(order_id, user_id)
+	if err != nil {
+		slf.respWriter.HTTPCustomErr(ctx, err)
+		return
+	}
+
+	slf.respWriter.HTTPJson(ctx, nil)
+}
