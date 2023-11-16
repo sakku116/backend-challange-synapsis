@@ -53,6 +53,7 @@ func (slf *CartRepo) GetLast(is_checkout bool, user_id string) (*model.Cart, err
 func (slf *CartRepo) GetAssociatedProductOrders(id string) ([]model.ProductOrder, error) {
 	var productOrders []model.ProductOrder
 	err := slf.DB.Model(&model.Cart{ID: id}).
+		Preload("Product"). // actually its preloading from ProductOrders instead Cart (depending on result model / not from table where operation is performed (cart))
 		Association("ProductOrders").
 		Find(&productOrders)
 	if err != nil {

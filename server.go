@@ -29,10 +29,12 @@ func SetupServer(router *gin.Engine) {
 	// services
 	authService := service.NewAuthService(userRepo)
 	productService := service.NewProductService(productRepo, cartRepo, productOrder)
+	cartService := service.NewCartService(cartRepo)
 
 	// handlers
 	authHandler := handler.NewAuthHandler(responseWriter, authService)
 	productHandler := handler.NewProductHandler(responseWriter, productService)
+	cartHandler := handler.NewCartHandler(responseWriter, cartService)
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -51,7 +53,7 @@ func SetupServer(router *gin.Engine) {
 		secureRouter.GET("/products", productHandler.GetList)
 		secureRouter.GET("/products/category-list", productHandler.GetCategoryList)
 		secureRouter.POST("/products/:id/add-to-cart", productHandler.AddItemToCart)
-		secureRouter.GET("/cart/items")
+		secureRouter.GET("/cart/items", cartHandler.GetCartItems)
 		secureRouter.DELETE("/cart/items/{id}")
 		secureRouter.POST("/cart/checkout")
 	}

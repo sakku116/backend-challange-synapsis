@@ -133,6 +133,18 @@ paths:
       summary: Register New User
       tags:
       - Auth
+  /cart/items:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.BaseJSONResp'
+      security:
+      - BearerAuth: []
+      summary: get product list from current cart
+      tags:
+      - Cart
   /products:
     get:
       parameters:

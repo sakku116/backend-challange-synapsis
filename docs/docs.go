@@ -132,6 +132,27 @@ const docTemplate = `{
                 }
             }
         },
+        "/cart/items": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "get product list from current cart",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/rest.BaseJSONResp"
+                        }
+                    }
+                }
+            }
+        },
         "/products": {
             "get": {
                 "security": [
