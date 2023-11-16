@@ -46,9 +46,9 @@ func (slf *ProductHandler) GetList(ctx *gin.Context) {
 		return
 	}
 
-	var result []*rest.GetProductListResp
+	var result []rest.GetProductListResp
 	dto := rest.GetProductListResp{}
-	result = append(result, dto.ParseFromEntityList(&products)...)
+	result = append(result, dto.ParseFromEntityList(products)...)
 
 	slf.respWriter.HTTPJson(ctx, result)
 }

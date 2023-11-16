@@ -16,10 +16,10 @@ type GetProductListResp struct {
 	Category string  `json:"category"`
 }
 
-func (slf *GetProductListResp) ParseFromEntityList(products *[]model.Product) []*GetProductListResp {
-	var result []*GetProductListResp
-	for _, product := range *products {
-		parsed := &GetProductListResp{
+func (slf *GetProductListResp) ParseFromEntityList(products []model.Product) []GetProductListResp {
+	var result []GetProductListResp
+	for _, product := range products {
+		parsed := GetProductListResp{
 			ID:        product.ID,
 			CreatedAt: product.CreatedAt,
 			UpdatedAt: product.UpdatedAt,
