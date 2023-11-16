@@ -17,6 +17,9 @@ type IProductService interface {
 	BulkCreate(products []model.Product) error
 	GetByNameAndPrice(name string, price float64) (*model.Product, error)
 	GetCategoryList() ([]string, error)
+	GetByID(id string) (*model.Product, error)
+	AppendProductOrders(id string, orders []model.ProductOrder) error
+	GetAssociatedProductOrders(id string) ([]model.ProductOrder, error)
 }
 
 func NewProductRepo(db *gorm.DB) IProductService {
@@ -94,4 +97,40 @@ func (slf *ProductRepo) GetCategoryList() ([]string, error) {
 		return nil, err
 	}
 	return categories, nil
+}
+
+func (slf *ProductRepo) GetByID(id string) (*model.Product, error) {
+	var product model.Product
+	err := slf.DB.First(&product, "id = ?", id).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, exception.DbObjNotFound
+	} else if err != nil {
+		return nil, err
+	}
+	return &product, nil
+}
+
+func (slf *ProductRepo) AppendProductOrders(id string, orders []model.ProductOrder) error {
+	err := slf.DB.Model(&model.Product{ID: id}).Association("ProductOrders").Append(orders)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (slf *ProductRepo) GetAssociatedProductOrders(id string) ([]model.ProductOrder, error) {
+	var productOrders []model.ProductOrder
+	err := slf.DB.Model(&model.Product{ID: id}).Association("ProductOrders").Find(&productOrders)
+	if err != nil {
+		return []model.ProductOrder{}, err
+	}
+	return productOrders, nil
+}
+
+func (slf *ProductRepo) Update(product *model.Product) error {
+	err := slf.DB.Save(product).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -16,6 +16,7 @@ type ProductHandler struct {
 type IProductHandler interface {
 	GetList(ctx *gin.Context)
 	GetCategoryList(ctx *gin.Context)
+	AddItemToCart(ctx *gin.Context)
 }
 
 func NewProductHandler(respWriter http_response.IResponseWriter, productService service.IProductService) IProductHandler {
@@ -65,4 +66,37 @@ func (slf *ProductHandler) GetCategoryList(ctx *gin.Context) {
 	}
 
 	slf.respWriter.HTTPJson(ctx, categories)
+}
+
+// @Summary add item to cart
+// @Tags Product
+// @Router /products/{id}/add-to-cart [post]
+// @Security BearerAuth
+// @param id path string true "id"
+// @param payload  body  rest.PostAddItemToCartReq  true "payload"
+// @Success 200 {object} rest.BaseJSONResp{}
+func (slf *ProductHandler) AddItemToCart(ctx *gin.Context) {
+	product_id := ctx.Param("id")
+	user_id := ctx.GetString("user_id")
+
+	var payload rest.PostAddItemToCartReq
+	err := ctx.BindJSON(&payload)
+	if err != nil {
+		slf.respWriter.HTTPJsonErr(ctx, 400, "bad request", err.Error(), nil)
+		return
+	}
+
+	err = payload.Validate()
+	if err != nil {
+		slf.respWriter.HTTPCustomErr(ctx, err)
+		return
+	}
+
+	err = slf.productService.AddItemToCart(product_id, payload.Quantity, user_id)
+	if err != nil {
+		slf.respWriter.HTTPCustomErr(ctx, err)
+		return
+	}
+
+	slf.respWriter.HTTPJson(ctx, nil)
 }

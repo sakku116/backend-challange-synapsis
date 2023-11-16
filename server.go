@@ -23,10 +23,12 @@ func SetupServer(router *gin.Engine) {
 	// repositories
 	userRepo := repository.NewUserRepo(database)
 	productRepo := repository.NewProductRepo(database)
+	cartRepo := repository.NewCartRepo(database)
+	productOrder := repository.NewProductOrderRepo(database)
 
 	// services
 	authService := service.NewAuthService(userRepo)
-	productService := service.NewProductService(productRepo)
+	productService := service.NewProductService(productRepo, cartRepo, productOrder)
 
 	// handlers
 	authHandler := handler.NewAuthHandler(responseWriter, authService)
@@ -48,7 +50,7 @@ func SetupServer(router *gin.Engine) {
 
 		secureRouter.GET("/products", productHandler.GetList)
 		secureRouter.GET("/products/category-list", productHandler.GetCategoryList)
-		secureRouter.POST("/products/{id}/add-to-cart")
+		secureRouter.POST("/products/:id/add-to-cart", productHandler.AddItemToCart)
 		secureRouter.GET("/cart/items")
 		secureRouter.DELETE("/cart/items/{id}")
 		secureRouter.POST("/cart/checkout")

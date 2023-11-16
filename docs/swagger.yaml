@@ -36,6 +36,12 @@ definitions:
       updated_at:
         type: string
     type: object
+  rest.PostAddItemToCartReq:
+    properties:
+      quantity:
+        default: 1
+        type: integer
+    type: object
   rest.PostCheckTokenReq:
     properties:
       token:
@@ -168,6 +174,30 @@ paths:
       security:
       - BearerAuth: []
       summary: get product list
+      tags:
+      - Product
+  /products/{id}/add-to-cart:
+    post:
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/rest.PostAddItemToCartReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.BaseJSONResp'
+      security:
+      - BearerAuth: []
+      summary: add item to cart
       tags:
       - Product
   /products/category-list:

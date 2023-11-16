@@ -240,6 +240,45 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/products/{id}/add-to-cart": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "add item to cart",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rest.PostAddItemToCartReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/rest.BaseJSONResp"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -297,6 +336,15 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "rest.PostAddItemToCartReq": {
+            "type": "object",
+            "properties": {
+                "quantity": {
+                    "type": "integer",
+                    "default": 1
                 }
             }
         },

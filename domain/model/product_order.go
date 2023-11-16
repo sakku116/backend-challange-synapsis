@@ -12,7 +12,7 @@ type ProductOrder struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 
-	CartID   string  `json:"cart_id" gorm:"default:null"`
-	Quantity int     `json:"quantity"`
-	Product  Product `json:"product"`
+	CartID    string `json:"cart_id" gorm:"default:null"`
+	Quantity  int    `json:"quantity"`
+	ProductID string `json:"product_id" gorm:"default:null"`
 }

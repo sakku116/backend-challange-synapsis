@@ -89,7 +89,7 @@ func (slf *AuthService) CheckToken(token string) (*model.User, error) {
 	user, err := slf.userRepo.GetByID(userID)
 	if err != nil {
 		return nil, &error_utils.CustomErr{
-			Code:    404,
+			Code:    401,
 			Message: "user not found",
 		}
 	}

@@ -2,22 +2,29 @@ package service
 
 import (
 	"synapsis/domain/model"
+	"synapsis/exception"
 	"synapsis/repository"
+	error_utils "synapsis/utils/error"
+	"synapsis/utils/helper"
 )
 
 type ProductService struct {
-	productRepo repository.IProductService
+	productRepo      repository.IProductService
+	cartRepo         repository.ICartRepo
+	productOrderRepo repository.IProductOrderRepo
 }
 
 type IProductService interface {
 	GetList(category string, search string, page int, limit int, sort_by string, sort_order string) ([]model.Product, error)
 	GetCategoryList() ([]string, error)
-	AddItemToCart(id string) error
+	AddItemToCart(product_id string, quantity int, user_id string) error
 }
 
-func NewProductService(productRepo repository.IProductService) IProductService {
+func NewProductService(productRepo repository.IProductService, cartRepo repository.ICartRepo, productOrderRepo repository.IProductOrderRepo) IProductService {
 	return &ProductService{
-		productRepo: productRepo,
+		productRepo:      productRepo,
+		cartRepo:         cartRepo,
+		productOrderRepo: productOrderRepo,
 	}
 }
 
@@ -38,6 +45,58 @@ func (slf *ProductService) GetCategoryList() ([]string, error) {
 	return categories, nil
 }
 
-func (slf *ProductService) AddItemToCart(id string) error {
+func (slf *ProductService) AddItemToCart(product_id string, quantity int, user_id string) error {
+	// check if product exists
+	_, err := slf.productRepo.GetByID(product_id)
+	if err != nil {
+		if err == exception.DbObjNotFound {
+			return &error_utils.CustomErr{
+				Code:    404,
+				Message: "product not found",
+			}
+		} else {
+			return err
+		}
+	}
+
+	// get latest unchecked-out cart or create if it doesn't exist
+	cart, err := slf.cartRepo.GetLast(false)
+	var newCart *model.Cart
+	if err != nil {
+		if err == exception.DbObjNotFound {
+			newCart = &model.Cart{
+				ID: helper.GenerateUUID(),
+			}
+			err = slf.cartRepo.Create(newCart)
+			if err != nil {
+				return err
+			}
+			cart = newCart
+		} else {
+			return nil
+		}
+	}
+
+	// check if product is already in cart
+	cartAssociatedProductOrder, err := slf.cartRepo.GetAssociatedProductOrders(cart.ID)
+	if err != nil {
+		return err
+	}
+	for _, productOrder := range cartAssociatedProductOrder {
+		if productOrder.ProductID == product_id {
+			return &error_utils.CustomErr{
+				Code:    400,
+				Message: "product already added to cart",
+			}
+		}
+	}
+
+	// create product order
+	err = slf.productOrderRepo.Create(&model.ProductOrder{
+		CartID:    cart.ID,
+		ProductID: product_id,
+		Quantity:  quantity,
+	})
+
 	return nil
 }
