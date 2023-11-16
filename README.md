@@ -14,11 +14,18 @@
 
 
 - `seed-data`
-    used to seed all required data (minimum) for mandatory requirements.
+    used to seed all required data for mandatory minimum requirements.
     ```
     go run . seed-data
     ```
 
-## API Documentation
-see [http://localhost:8123/swagger/index.html](http://localhost:8123/swagger/index.html).
+## Swagger
+go to `/swagger/index.html` route path to see API documentation via Swagger.
 
+## API Mandatory Requirements
+- Customer can view product list by product category
+- Customer can add product to shopping cart
+- Customers can see a list of products that have been added to the shopping cart
+- Customer can delete product list in shopping cart
+- Customers can checkout and make payment transactions
+- Login and register customers
