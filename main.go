@@ -15,7 +15,7 @@ import (
 // @securitydefinitions.apiKey BearerAuth
 // @in header
 // @name Authorization
-// @default Bearer {token}
+// @description JWT Authorization header using the Bearer scheme (add 'Bearer ' prefix).
 func main() {
 	args := os.Args
 	if len(args) > 1 {

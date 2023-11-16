@@ -287,6 +287,7 @@ paths:
       - Product
 securityDefinitions:
   BearerAuth:
+    description: JWT Authorization header using the Bearer scheme (add 'Bearer ' prefix).
     in: header
     name: Authorization
     type: apiKey
