@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"synapsis/config"
 	"synapsis/domain/model"
 	"synapsis/exception"
 	"synapsis/repository"
@@ -47,9 +48,16 @@ func SeedSuperuser(userRepo repository.IUserRepo, args ...string) {
 		Password: string(hashedPass),
 	}
 	userRepo.Create(user)
+
+	// generate access token
+	token, err := helper.GenerateJwtToken(username, user.ID, user.SessionID, config.Envs.JWT_SECRET, config.Envs.JWT_EXP)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(token)
 }
 
-func SeedData(productRepo repository.IProductService) {
+func SeedData(productRepo repository.IProductRepo) {
 	// products
 	products := []model.Product{
 		{
