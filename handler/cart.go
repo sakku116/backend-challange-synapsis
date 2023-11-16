@@ -25,7 +25,7 @@ func NewCartHandler(respWriter http_response.IResponseWriter, cartService servic
 	}
 }
 
-// @Summary get product list from current cart
+// @Summary get product list from current cart (MANDATORY)
 // @Tags Cart
 // @Router /cart/orders [get]
 // @Security BearerAuth
@@ -45,7 +45,7 @@ func (slf *CartHandler) GetCartItems(ctx *gin.Context) {
 	slf.respWriter.HTTPJson(ctx, resp)
 }
 
-// @Summary remove item from cart
+// @Summary remove item from cart (MANDATORY)
 // @Tags Cart
 // @Router /cart/orders/{id} [delete]
 // @Security BearerAuth

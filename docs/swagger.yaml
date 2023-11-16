@@ -108,7 +108,7 @@ paths:
                 data:
                   $ref: '#/definitions/rest.AuthLoginResp'
               type: object
-      summary: generate jwt token
+      summary: generate jwt token (MANDATORY)
       tags:
       - Auth
   /auth/register:
@@ -130,7 +130,7 @@ paths:
                 data:
                   $ref: '#/definitions/rest.AuthLoginResp'
               type: object
-      summary: Register New User
+      summary: Register New User (MANDATORY)
       tags:
       - Auth
   /cart/orders:
@@ -142,7 +142,7 @@ paths:
             $ref: '#/definitions/rest.BaseJSONResp'
       security:
       - BearerAuth: []
-      summary: get product list from current cart
+      summary: get product list from current cart (MANDATORY)
       tags:
       - Cart
   /cart/orders/{id}:
@@ -160,7 +160,7 @@ paths:
             $ref: '#/definitions/rest.BaseJSONResp'
       security:
       - BearerAuth: []
-      summary: remove item from cart
+      summary: remove item from cart (MANDATORY)
       tags:
       - Cart
   /products:
@@ -203,7 +203,7 @@ paths:
               type: object
       security:
       - BearerAuth: []
-      summary: get product list
+      summary: get product list (MANDATORY)
       tags:
       - Product
   /products/{id}/add-to-cart:
@@ -227,7 +227,7 @@ paths:
             $ref: '#/definitions/rest.BaseJSONResp'
       security:
       - BearerAuth: []
-      summary: add item to cart
+      summary: add item to cart (MANDATORY)
       tags:
       - Product
   /products/category-list:

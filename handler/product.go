@@ -26,7 +26,7 @@ func NewProductHandler(respWriter http_response.IResponseWriter, productService 
 	}
 }
 
-// @Summary get product list
+// @Summary get product list (MANDATORY)
 // @Tags Product
 // @Success 200 {object} rest.BaseJSONResp{data=[]rest.GetProductListResp}
 // @Router /products [get]
@@ -67,7 +67,7 @@ func (slf *ProductHandler) GetCategoryList(ctx *gin.Context) {
 	slf.respWriter.HTTPJson(ctx, categories)
 }
 
-// @Summary add item to cart
+// @Summary add item to cart (MANDATORY)
 // @Tags Product
 // @Router /products/{id}/add-to-cart [post]
 // @Security BearerAuth

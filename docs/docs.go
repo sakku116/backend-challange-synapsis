@@ -59,7 +59,7 @@ const docTemplate = `{
                 "tags": [
                     "Auth"
                 ],
-                "summary": "generate jwt token",
+                "summary": "generate jwt token (MANDATORY)",
                 "parameters": [
                     {
                         "description": "payload",
@@ -98,7 +98,7 @@ const docTemplate = `{
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Register New User",
+                "summary": "Register New User (MANDATORY)",
                 "parameters": [
                     {
                         "description": "payload",
@@ -142,7 +142,7 @@ const docTemplate = `{
                 "tags": [
                     "Cart"
                 ],
-                "summary": "get product list from current cart",
+                "summary": "get product list from current cart (MANDATORY)",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -163,7 +163,7 @@ const docTemplate = `{
                 "tags": [
                     "Cart"
                 ],
-                "summary": "remove item from cart",
+                "summary": "remove item from cart (MANDATORY)",
                 "parameters": [
                     {
                         "type": "string",
@@ -193,7 +193,7 @@ const docTemplate = `{
                 "tags": [
                     "Product"
                 ],
-                "summary": "get product list",
+                "summary": "get product list (MANDATORY)",
                 "parameters": [
                     {
                         "type": "string",
@@ -302,7 +302,7 @@ const docTemplate = `{
                 "tags": [
                     "Product"
                 ],
-                "summary": "add item to cart",
+                "summary": "add item to cart (MANDATORY)",
                 "parameters": [
                     {
                         "type": "string",

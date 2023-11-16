@@ -27,7 +27,7 @@ func NewAuthHandler(respWriter http_response.IResponseWriter, authService servic
 }
 
 // Login
-// @Summary generate jwt token
+// @Summary generate jwt token (MANDATORY)
 // @Tags Auth
 // @Success 200 {object} rest.BaseJSONResp{data=rest.AuthLoginResp}
 // @Router /auth/login [post]
@@ -75,7 +75,7 @@ func (slf *AuthHandler) CheckToken(ctx *gin.Context) {
 	})
 }
 
-// @Summary Register New User
+// @Summary Register New User (MANDATORY)
 // @Tags Auth
 // @Success 200 {object} rest.BaseJSONResp{data=rest.AuthLoginResp}
 // @Router /auth/register [post]
