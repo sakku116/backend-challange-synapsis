@@ -99,6 +99,9 @@ func (slf *ProductService) AddItemToCart(product_id string, quantity int, user_i
 		ProductID: product_id,
 		Quantity:  quantity,
 	})
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
