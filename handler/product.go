@@ -45,8 +45,7 @@ func (slf *ProductHandler) GetList(ctx *gin.Context) {
 		slf.respWriter.HTTPCustomErr(ctx, err)
 		return
 	}
-
-	var result []rest.GetProductListResp
+	result := make([]rest.GetProductListResp, 0)
 	dto := rest.GetProductListResp{}
 	result = append(result, dto.ParseFromEntityList(products)...)
 
