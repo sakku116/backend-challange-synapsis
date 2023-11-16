@@ -14,5 +14,6 @@ type Cart struct {
 
 	UserID        string         `json:"user_id" gorm:"default:null"`
 	IsCheckout    bool           `json:"is_checkout" gorm:"default:false"`
+	CheckedOutAt  time.Time      `json:"checked_out_at" gorm:"default:null"`
 	ProductOrders []ProductOrder `json:"product_orders"`
 }

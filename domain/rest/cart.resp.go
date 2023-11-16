@@ -39,3 +39,7 @@ func (slf *GetCartItemsResp) ParseFromEntityList(orders []model.ProductOrder) []
 
 	return result
 }
+
+type PostCheckoutCartResp struct {
+	MoneyReturn float64 `json:"money_return"`
+}

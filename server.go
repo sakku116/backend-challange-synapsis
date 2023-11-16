@@ -55,7 +55,7 @@ func SetupServer(router *gin.Engine) {
 		secureRouter.POST("/products/:id/add-to-cart", productHandler.AddItemToCart)
 		secureRouter.GET("/cart/orders", cartHandler.GetCartItems)
 		secureRouter.DELETE("/cart/orders/:id", cartHandler.RemoveItemFromCart)
-		secureRouter.POST("/cart/checkout")
+		secureRouter.POST("/cart/checkout", cartHandler.CheckoutCart)
 	}
 
 	// swagger

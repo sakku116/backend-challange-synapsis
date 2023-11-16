@@ -12,6 +12,8 @@ type CartRepo struct {
 }
 
 type ICartRepo interface {
+	Delete(id string) error
+	Save(cart *model.Cart) error
 	Create(cart *model.Cart) error
 	GetLast(is_checkout bool, user_id string) (*model.Cart, error)
 	GetAssociatedProductOrders(id string) ([]model.ProductOrder, error)
@@ -23,6 +25,21 @@ func NewCartRepo(db *gorm.DB) ICartRepo {
 	return &CartRepo{
 		DB: db,
 	}
+}
+func (slf *CartRepo) Delete(id string) error {
+	err := slf.DB.Where("id = ?", id).Delete(&model.Cart{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (slf *CartRepo) Save(cart *model.Cart) error {
+	err := slf.DB.Save(&cart).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (slf *CartRepo) Create(cart *model.Cart) error {

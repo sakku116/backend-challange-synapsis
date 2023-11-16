@@ -16,6 +16,7 @@ type CartHandler struct {
 type ICartHandler interface {
 	GetCartItems(ctx *gin.Context)
 	RemoveItemFromCart(ctx *gin.Context)
+	CheckoutCart(ctx *gin.Context)
 }
 
 func NewCartHandler(respWriter http_response.IResponseWriter, cartService service.ICartService) ICartHandler {
@@ -62,4 +63,31 @@ func (slf *CartHandler) RemoveItemFromCart(ctx *gin.Context) {
 	}
 
 	slf.respWriter.HTTPJson(ctx, nil)
+}
+
+// @Summary checkout cart (MANDATORY)
+// @Tags Cart
+// @Router /cart/checkout [post]
+// @Security BearerAuth
+// @Param payload body rest.PostCheckoutCartReq true "payload"
+// @Success 200 {object} rest.BaseJSONResp{data=rest.PostCheckoutCartResp}
+func (slf *CartHandler) CheckoutCart(ctx *gin.Context) {
+	user_id := ctx.GetString("user_id")
+
+	var payload rest.PostCheckoutCartReq
+	err := ctx.ShouldBindJSON(&payload)
+	if err != nil {
+		slf.respWriter.HTTPJsonErr(ctx, 400, "bad request", err.Error(), nil)
+		return
+	}
+
+	moneyReturn, err := slf.cartService.CheckoutCart(user_id, payload.MoneyInput)
+	if err != nil {
+		slf.respWriter.HTTPCustomErr(ctx, err)
+		return
+	}
+
+	slf.respWriter.HTTPJson(ctx, rest.PostCheckoutCartResp{
+		MoneyReturn: moneyReturn,
+	})
 }

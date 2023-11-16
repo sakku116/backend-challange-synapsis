@@ -132,6 +132,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/cart/checkout": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "checkout cart (MANDATORY)",
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rest.PostCheckoutCartReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/rest.BaseJSONResp"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/rest.PostCheckoutCartResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/cart/orders": {
             "get": {
                 "security": [
@@ -404,6 +448,25 @@ const docTemplate = `{
             "properties": {
                 "token": {
                     "type": "string"
+                }
+            }
+        },
+        "rest.PostCheckoutCartReq": {
+            "type": "object",
+            "required": [
+                "money_input"
+            ],
+            "properties": {
+                "money_input": {
+                    "type": "number"
+                }
+            }
+        },
+        "rest.PostCheckoutCartResp": {
+            "type": "object",
+            "properties": {
+                "money_return": {
+                    "type": "number"
                 }
             }
         },

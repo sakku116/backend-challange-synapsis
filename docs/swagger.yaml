@@ -47,6 +47,18 @@ definitions:
       token:
         type: string
     type: object
+  rest.PostCheckoutCartReq:
+    properties:
+      money_input:
+        type: number
+    required:
+    - money_input
+    type: object
+  rest.PostCheckoutCartResp:
+    properties:
+      money_return:
+        type: number
+    type: object
   rest.PostLoginReq:
     properties:
       password:
@@ -133,6 +145,30 @@ paths:
       summary: Register New User (MANDATORY)
       tags:
       - Auth
+  /cart/checkout:
+    post:
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/rest.PostCheckoutCartReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/rest.BaseJSONResp'
+            - properties:
+                data:
+                  $ref: '#/definitions/rest.PostCheckoutCartResp'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: checkout cart (MANDATORY)
+      tags:
+      - Cart
   /cart/orders:
     get:
       responses:

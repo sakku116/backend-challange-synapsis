@@ -5,7 +5,7 @@ import (
 	"synapsis/exception"
 	"synapsis/repository"
 	error_utils "synapsis/utils/error"
-	"synapsis/utils/helper"
+	"time"
 )
 
 type CartService struct {
@@ -17,6 +17,7 @@ type CartService struct {
 type ICartService interface {
 	GetCartItems(user_id string) ([]model.ProductOrder, error)
 	RemoveItemFromCart(order_id string, user_id string) error
+	CheckoutCart(user_id string, money_input float64) (float64, error)
 }
 
 func NewCartService(cartRepo repository.ICartRepo, productRepo repository.IProductRepo, productOrderRepo repository.IProductOrderRepo) *CartService {
@@ -28,20 +29,14 @@ func NewCartService(cartRepo repository.ICartRepo, productRepo repository.IProdu
 }
 
 func (slf *CartService) GetCartItems(user_id string) ([]model.ProductOrder, error) {
-	// get latest unchecked-out cart or create if it doesn't exist
+	// get latest unchecked-out cart
 	cart, err := slf.cartRepo.GetLast(false, user_id)
-	var newCart *model.Cart
 	if err != nil {
 		if err == exception.DbObjNotFound {
-			newCart = &model.Cart{
-				ID:     helper.GenerateUUID(),
-				UserID: user_id,
+			return []model.ProductOrder{}, &error_utils.CustomErr{
+				Code:    400,
+				Message: "no items ordered",
 			}
-			err = slf.cartRepo.Create(newCart)
-			if err != nil {
-				return []model.ProductOrder{}, err
-			}
-			cart = newCart
 		} else {
 			return []model.ProductOrder{}, err
 		}
@@ -57,20 +52,14 @@ func (slf *CartService) GetCartItems(user_id string) ([]model.ProductOrder, erro
 }
 
 func (slf *CartService) RemoveItemFromCart(order_id string, user_id string) error {
-	// get latest unchecked-out cart or create if it doesn't exist
+	// get latest unchecked-out cart
 	cart, err := slf.cartRepo.GetLast(false, user_id)
-	var newCart *model.Cart
 	if err != nil {
 		if err == exception.DbObjNotFound {
-			newCart = &model.Cart{
-				ID:     helper.GenerateUUID(),
-				UserID: user_id,
+			return &error_utils.CustomErr{
+				Code:    400,
+				Message: "no items ordered",
 			}
-			err = slf.cartRepo.Create(newCart)
-			if err != nil {
-				return err
-			}
-			cart = newCart
 		} else {
 			return err
 		}
@@ -107,9 +96,71 @@ func (slf *CartService) RemoveItemFromCart(order_id string, user_id string) erro
 		return err
 	}
 
+	// delete cart if orders is empty
+	orders, err = slf.cartRepo.GetAssociatedProductOrders(cart.ID)
+	if err != nil {
+		return err
+	}
+	if len(orders) == 0 {
+		err = slf.cartRepo.Delete(cart.ID)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
-func (slf *CartService) CheckoutCart(user_id string) error {
-	return nil
+func (slf *CartService) CheckoutCart(user_id string, money_input float64) (float64, error) {
+	// get latest unchecked-out cart
+	cart, err := slf.cartRepo.GetLast(false, user_id)
+	if err != nil {
+		if err == exception.DbObjNotFound {
+			return 0, &error_utils.CustomErr{
+				Code:    400,
+				Message: "no items ordered",
+			}
+		} else {
+			return 0, err
+		}
+	}
+
+	// check if product is in cart
+	orders, err := slf.cartRepo.GetAssociatedProductOrders(cart.ID)
+	if err != nil {
+		return 0, err
+	}
+	if len(orders) == 0 {
+		return 0, &error_utils.CustomErr{
+			Code:    400,
+			Message: "cart is empty",
+		}
+	}
+
+	// sum total price
+	totalPrice := 0.0
+	for _, order := range orders {
+		totalPrice += float64(order.Quantity) * order.Product.Price
+	}
+
+	// check if money is enough
+	if totalPrice > money_input {
+		return 0, &error_utils.CustomErr{
+			Code:    400,
+			Message: "money is not enough",
+		}
+	}
+
+	// total money return
+	totalMoneyReturn := money_input - totalPrice
+
+	// update cart
+	cart.IsCheckout = true
+	cart.CheckedOutAt = time.Now()
+	err = slf.cartRepo.Save(cart)
+	if err != nil {
+		return 0, err
+	}
+
+	return totalMoneyReturn, nil
 }
