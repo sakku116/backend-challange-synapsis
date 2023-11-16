@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"synapsis/domain/rest"
 	"synapsis/service"
 	"synapsis/utils/http_response"
 
@@ -14,6 +15,7 @@ type CartHandler struct {
 
 type ICartHandler interface {
 	GetCartItems(ctx *gin.Context)
+	// RemoveItemFromCart(ctx *gin.Context)
 }
 
 func NewCartHandler(respWriter http_response.IResponseWriter, cartService service.ICartService) ICartHandler {
@@ -36,5 +38,19 @@ func (slf *CartHandler) GetCartItems(ctx *gin.Context) {
 		return
 	}
 
-	slf.respWriter.HTTPJson(ctx, orders)
+	dto := rest.GetCartItemsResp{}
+	resp := []rest.GetCartItemsResp{}
+	resp = append(resp, dto.ParseFromEntityList(orders)...)
+
+	slf.respWriter.HTTPJson(ctx, resp)
 }
+
+// @Summary remove item from cart
+// @Tags Cart
+// @Router /cart/items/{id} [delete]
+// @Security BearerAuth
+// @Success 200 {object} rest.BaseJSONResp{}
+// func (slf *CartHandler) RemoveItemFromCart(ctx *gin.Context) {
+// 	product_id := ctx.Param("id")
+
+// }
