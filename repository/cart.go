@@ -13,7 +13,7 @@ type CartRepo struct {
 
 type ICartRepo interface {
 	Create(cart *model.Cart) error
-	GetLast(is_checkout bool) (*model.Cart, error)
+	GetLast(is_checkout bool, user_id string) (*model.Cart, error)
 	GetAssociatedProductOrders(id string) ([]model.ProductOrder, error)
 	AppendProductOrders(id string, orders []model.ProductOrder) error
 }
@@ -32,9 +32,14 @@ func (slf *CartRepo) Create(cart *model.Cart) error {
 	return nil
 }
 
-func (slf *CartRepo) GetLast(is_checkout bool) (*model.Cart, error) {
+func (slf *CartRepo) GetLast(is_checkout bool, user_id string) (*model.Cart, error) {
 	var cart model.Cart
-	err := slf.DB.Model(&model.Cart{}).Preload("ProductOrders").Order("updated_at desc").Where("is_checkout = ?", is_checkout).First(&cart).Error
+	err := slf.DB.Model(&model.Cart{}).
+		Preload("ProductOrders").
+		Order("updated_at desc").
+		Where("user_id = ?", user_id).
+		Where("is_checkout = ?", is_checkout).
+		First(&cart).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, exception.DbObjNotFound
@@ -47,7 +52,9 @@ func (slf *CartRepo) GetLast(is_checkout bool) (*model.Cart, error) {
 
 func (slf *CartRepo) GetAssociatedProductOrders(id string) ([]model.ProductOrder, error) {
 	var productOrders []model.ProductOrder
-	err := slf.DB.Model(&model.Cart{ID: id}).Association("ProductOrders").Find(&productOrders)
+	err := slf.DB.Model(&model.Cart{ID: id}).
+		Association("ProductOrders").
+		Find(&productOrders)
 	if err != nil {
 		return []model.ProductOrder{}, err
 	}

@@ -11,7 +11,7 @@ type ProductRepo struct {
 	DB *gorm.DB
 }
 
-type IProductService interface {
+type IProductRepo interface {
 	Create(product *model.Product) error
 	GetList(category string, search string, page int, limit int, sort_by string, sort_order string) ([]model.Product, error)
 	BulkCreate(products []model.Product) error
@@ -22,7 +22,7 @@ type IProductService interface {
 	GetAssociatedProductOrders(id string) ([]model.ProductOrder, error)
 }
 
-func NewProductRepo(db *gorm.DB) IProductService {
+func NewProductRepo(db *gorm.DB) IProductRepo {
 	return &ProductRepo{
 		DB: db,
 	}

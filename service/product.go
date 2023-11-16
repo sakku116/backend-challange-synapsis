@@ -9,7 +9,7 @@ import (
 )
 
 type ProductService struct {
-	productRepo      repository.IProductService
+	productRepo      repository.IProductRepo
 	cartRepo         repository.ICartRepo
 	productOrderRepo repository.IProductOrderRepo
 }
@@ -20,7 +20,7 @@ type IProductService interface {
 	AddItemToCart(product_id string, quantity int, user_id string) error
 }
 
-func NewProductService(productRepo repository.IProductService, cartRepo repository.ICartRepo, productOrderRepo repository.IProductOrderRepo) IProductService {
+func NewProductService(productRepo repository.IProductRepo, cartRepo repository.ICartRepo, productOrderRepo repository.IProductOrderRepo) IProductService {
 	return &ProductService{
 		productRepo:      productRepo,
 		cartRepo:         cartRepo,
@@ -60,7 +60,7 @@ func (slf *ProductService) AddItemToCart(product_id string, quantity int, user_i
 	}
 
 	// get latest unchecked-out cart or create if it doesn't exist
-	cart, err := slf.cartRepo.GetLast(false)
+	cart, err := slf.cartRepo.GetLast(false, user_id)
 	var newCart *model.Cart
 	if err != nil {
 		if err == exception.DbObjNotFound {
@@ -73,7 +73,7 @@ func (slf *ProductService) AddItemToCart(product_id string, quantity int, user_i
 			}
 			cart = newCart
 		} else {
-			return nil
+			return err
 		}
 	}
 
