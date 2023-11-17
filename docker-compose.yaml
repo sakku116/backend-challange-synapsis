@@ -1,0 +1,38 @@
+version: '3'
+services:
+  app:
+    container_name: synapsis-test
+    build: .
+    env_file: .env
+    ports:
+      - 8123:8123
+    restart: on-failure
+    volumes:
+      - api:/usr/src/app/
+    depends_on:
+      - fullstack-postgres
+    networks:
+      - test
+
+  fullstack-postgres:
+    image: postgres:latest
+    container_name: full_db_postgres
+    environment:
+      - POSTGRES_USER=zakky
+      - POSTGRES_PASSWORD=1164
+      - POSTGRES_DB=postgres
+      - DATABASE_HOST=127.0.0.1
+    ports:
+      - '5432:5432'
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+    networks:
+      - test
+
+volumes:
+  api:
+  database_postgres:
+
+networks:
+  test:
+    driver: bridge
