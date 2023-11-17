@@ -25,6 +25,4 @@ EXPOSE 8080
 # RUN main seed-data
 
 # Command to run the executable
-CMD ["./main", "seed-superuser"]
-CMD ["./main", "seed-data"]
 CMD ["./main"]

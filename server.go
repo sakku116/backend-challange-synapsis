@@ -6,6 +6,7 @@ import (
 	"synapsis/middleware"
 	"synapsis/repository"
 	"synapsis/service"
+	"synapsis/utils/data"
 	"synapsis/utils/http_response"
 
 	"github.com/gin-gonic/gin"
@@ -25,6 +26,10 @@ func SetupServer(router *gin.Engine) {
 	productRepo := repository.NewProductRepo(database)
 	cartRepo := repository.NewCartRepo(database)
 	productOrderRepo := repository.NewProductOrderRepo(database)
+
+	// seed data
+	data.SeedData(productRepo)
+	data.SeedSuperuser(userRepo)
 
 	// services
 	authService := service.NewAuthService(userRepo)

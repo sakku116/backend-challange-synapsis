@@ -1,4 +1,4 @@
-package cli
+package data
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ import (
 // or args must be containing 2 strings for custom username, and passwords
 func SeedSuperuser(userRepo repository.IUserRepo, args ...string) {
 	// validate args
-	if len(args) != 3 && len(args) != 0 {
+	if len(args) != 2 && len(args) != 0 {
 		fmt.Println("invalid args, should be empty for default seed (superuser;superuser) or 2 strings for custom username, and passwords")
 		return
 	}

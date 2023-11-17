@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
-	"synapsis/cli"
 	"synapsis/config"
 	"synapsis/repository"
+	"synapsis/utils/data"
 )
 
 func CliHandler(args []string) {
@@ -22,10 +22,10 @@ func CliHandler(args []string) {
 	switch args[0] {
 	case "seed-superuser":
 		fmt.Println("running seed superuser...")
-		cli.SeedSuperuser(userRepo, args[1:]...)
+		data.SeedSuperuser(userRepo, args[1:]...)
 	case "seed-data":
 		fmt.Println("running seed data...")
-		cli.SeedData(productRepo)
+		data.SeedData(productRepo)
 	case "playground":
 		fmt.Println("running playground...")
 		Playground()

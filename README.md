@@ -19,6 +19,8 @@
     go run . seed-data
     ```
 
+> `seed-superuser` and `seed-data` are running automatically when server is starting.
+
 ## Swagger
 go to `/swagger/index.html` route path to see API documentation via Swagger.
 
