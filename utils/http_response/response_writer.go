@@ -12,7 +12,7 @@ type ResponseWriter struct{}
 type IResponseWriter interface {
 	HTTPCustomErr(ctx *gin.Context, err error)
 	HTTPJsonErr(ctx *gin.Context, code int, message string, detail string, data interface{})
-	HTTPJson(ctx *gin.Context, data interface{})
+	HTTPJson(ctx *gin.Context, data interface{}, message string)
 }
 
 func NewResponseWriter() IResponseWriter {
@@ -47,10 +47,10 @@ func (r *ResponseWriter) HTTPJsonErr(ctx *gin.Context, code int, message string,
 	})
 }
 
-func (r *ResponseWriter) HTTPJson(ctx *gin.Context, data interface{}) {
+func (r *ResponseWriter) HTTPJson(ctx *gin.Context, data interface{}, message string) {
 	ctx.JSON(200, rest.BaseJSONResp{
 		Error:   false,
-		Message: "OK",
+		Message: message,
 		Detail:  "",
 		Data:    data,
 	})

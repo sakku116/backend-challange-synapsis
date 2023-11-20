@@ -48,7 +48,7 @@ func (slf *AuthHandler) Login(ctx *gin.Context) {
 
 	slf.respWriter.HTTPJson(ctx, rest.AuthLoginResp{
 		AccessToken: token,
-	})
+	}, "OK")
 }
 
 // @Summary check jwt token
@@ -72,7 +72,7 @@ func (slf *AuthHandler) CheckToken(ctx *gin.Context) {
 
 	slf.respWriter.HTTPJson(ctx, rest.AuthCheckTokenResp{
 		Username: user.Username,
-	})
+	}, "OK")
 }
 
 // @Summary Register New User (MANDATORY)
@@ -121,5 +121,5 @@ func (slf *AuthHandler) Register(ctx *gin.Context) {
 
 	slf.respWriter.HTTPJson(ctx, rest.AuthLoginResp{
 		AccessToken: token,
-	})
+	}, "user created")
 }

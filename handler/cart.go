@@ -43,7 +43,7 @@ func (slf *CartHandler) GetCartItems(ctx *gin.Context) {
 	resp := []rest.GetCartItemsResp{}
 	resp = append(resp, dto.ParseFromEntityList(orders)...)
 
-	slf.respWriter.HTTPJson(ctx, resp)
+	slf.respWriter.HTTPJson(ctx, resp, "OK")
 }
 
 // @Summary remove item from cart (MANDATORY)
@@ -62,7 +62,7 @@ func (slf *CartHandler) RemoveItemFromCart(ctx *gin.Context) {
 		return
 	}
 
-	slf.respWriter.HTTPJson(ctx, nil)
+	slf.respWriter.HTTPJson(ctx, nil, "item removed")
 }
 
 // @Summary checkout cart (MANDATORY)
@@ -89,5 +89,5 @@ func (slf *CartHandler) CheckoutCart(ctx *gin.Context) {
 
 	slf.respWriter.HTTPJson(ctx, rest.PostCheckoutCartResp{
 		MoneyReturn: moneyReturn,
-	})
+	}, "OK")
 }

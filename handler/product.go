@@ -49,7 +49,7 @@ func (slf *ProductHandler) GetList(ctx *gin.Context) {
 	dto := rest.GetProductListResp{}
 	result = append(result, dto.ParseFromEntityList(products)...)
 
-	slf.respWriter.HTTPJson(ctx, result)
+	slf.respWriter.HTTPJson(ctx, result, "OK")
 }
 
 // @Summary get product category list
@@ -64,7 +64,7 @@ func (slf *ProductHandler) GetCategoryList(ctx *gin.Context) {
 		return
 	}
 
-	slf.respWriter.HTTPJson(ctx, categories)
+	slf.respWriter.HTTPJson(ctx, categories, "OK")
 }
 
 // @Summary add item to cart (MANDATORY)
@@ -97,5 +97,5 @@ func (slf *ProductHandler) AddItemToCart(ctx *gin.Context) {
 		return
 	}
 
-	slf.respWriter.HTTPJson(ctx, nil)
+	slf.respWriter.HTTPJson(ctx, nil, "item added")
 }
